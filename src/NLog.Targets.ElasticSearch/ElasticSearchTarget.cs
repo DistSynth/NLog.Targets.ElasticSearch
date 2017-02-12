@@ -75,6 +75,9 @@ namespace NLog.Targets.ElasticSearch
         [ArrayParameter(typeof(Field), "field")]
         public IList<Field> Fields { get; set; }
 
+        /// <summary>
+        /// Pipeline name for Elasticsearch ingest mode (available since ES version > 5.0)
+        /// </summary>
         public string Pipeline { get; set; }
 
         /// <summary>
@@ -201,10 +204,16 @@ namespace NLog.Targets.ElasticSearch
 
                 var index = Index.Render(logEvent).ToLowerInvariant();
                 var type = DocumentType.Render(logEvent);
+				
+                if (string.IsNullOrEmpty(Pipeline)) 
+                {
+                    payload.Add(new { _index = index, _type = type });
+                } 
+                else 
+                {
+                    payload.Add(new { _index = index, _type = type, pipeline = Pipeline});
+                }
 
-                var info = new { _index = index, _type = type, pipeline = Pipeline ?? "" };
-
-                payload.Add(new { index = info });
                 payload.Add(document);
             }
 
