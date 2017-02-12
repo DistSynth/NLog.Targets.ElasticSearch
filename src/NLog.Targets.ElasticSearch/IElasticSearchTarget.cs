@@ -64,15 +64,13 @@ namespace NLog.Targets.ElasticSearch
         IList<Field> Fields { get; set; }
 
         /// <summary>
+        /// Pipeline name for Elasticsearch ingest mode (available since ES version > 5.0)
+        /// </summary>
+        string Pipeline { get; set; }
+
+        /// <summary>
         /// Gets or sets an alertnative serializer for the elasticsearch client to use.
         /// </summary>
         IElasticsearchSerializer ElasticsearchSerializer { get; set; }
-
-        /// <summary>
-        /// Gets or sets if exceptions will be rethrown.
-        /// 
-        /// Set it to true if ElasticSearchTarget target is used within FallbackGroup target (https://github.com/NLog/NLog/wiki/FallbackGroup-target).
-        /// </summary>
-        bool ThrowExceptions { get; set; } 
     }
 }
