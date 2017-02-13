@@ -207,16 +207,15 @@ namespace NLog.Targets.ElasticSearch
 				
                 if (string.IsNullOrEmpty(Pipeline)) 
                 {
-                    payload.Add(new { _index = index, _type = type });
+                    payload.Add(new { index = new { _index = index, _type = type } });
                 } 
                 else 
                 {
-                    payload.Add(new { _index = index, _type = type, pipeline = Pipeline});
+                    payload.Add(new { index = new { _index = index, _type = type, pipeline = Pipeline } });
                 }
 
                 payload.Add(document);
             }
-
             return payload;
         }
     }
