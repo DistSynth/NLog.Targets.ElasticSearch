@@ -136,7 +136,7 @@ namespace NLog.Targets.ElasticSearch
 
                 var payload = FormPayload(logEvents);
 
-                var result = _client.Bulk<byte[]>(payload);
+                var result = _client.Bulk<byte[]>(payload, f => !string.IsNullOrEmpty(Pipeline) ? f.Pipeline(Pipeline) : f);
 
                 if (!result.Success)
                 {
@@ -204,16 +204,8 @@ namespace NLog.Targets.ElasticSearch
 
                 var index = Index.Render(logEvent).ToLowerInvariant();
                 var type = DocumentType.Render(logEvent);
-				
-                if (string.IsNullOrEmpty(Pipeline)) 
-                {
-                    payload.Add(new { index = new { _index = index, _type = type } });
-                } 
-                else 
-                {
-                    payload.Add(new { index = new { _index = index, _type = type, pipeline = Pipeline } });
-                }
 
+                payload.Add(new { index = new { _index = index, _type = type } });
                 payload.Add(document);
             }
             return payload;
